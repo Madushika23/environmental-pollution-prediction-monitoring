@@ -2,8 +2,11 @@
 
 ## About the Project
 
-This is a final-year project focused on environmental pollution prediction and monitoring using machine learning and data analysis. It focuses on air quality, water quality, and soil fertility.
+The Environmental Pollution Prediction and Monitoring System is a web-based application developed to monitor and predict environmental pollution levels in air, water, and soil.
 
+The system uses data analysis and machine learning techniques to help users understand pollution patterns and explore possible future pollution levels. It combines a Python-based backend with a web-based frontend to present environmental information in an accessible way.
+
+This project was developed as an academic project to explore how data analytics, forecasting, and machine learning can support environmental monitoring.
 The system combines a Python backend with a web interface to present environmental data and prediction results.
 
 ## Key Features
