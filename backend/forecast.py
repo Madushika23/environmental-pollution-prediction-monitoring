@@ -1,19 +1,19 @@
+
 """
 forecast.py
-Prophet-based forecasting, reading straight from the domain's own table.
-Simplified to daily-only, short-horizon (tomorrow + day after) forecasting.
 
-Multiple readings can land on the same calendar day (e.g. from testing
-the app several times in one sitting, or at different times of day).
-Prophet expects one y-value per date, so before fitting we collapse
-history down to one reading per day -- using the AVERAGE of that day's
-readings, not just the latest one. Air pollution genuinely varies by
-time of day (traffic, temperature inversions, etc.), so averaging
-removes that time-of-day noise instead of letting whichever moment
-happened to be tested last stand in for the whole day. All available
-distinct days are used (no upper cap) -- only a minimum is enforced
-before attempting a forecast.
+Provides short-term forecasting using Prophet and historical
+readings stored in the database.
+
+The forecasting process groups readings by calendar date and
+calculates the daily average when multiple readings exist for
+the same day. This creates one observation per day for Prophet.
+
+The model uses the available historical data, subject to the
+minimum history required for forecasting, to generate forecasts
+for the next two days.
 """
+
 
 import pandas as pd
 from database import get_history
