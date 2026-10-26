@@ -1,9 +1,20 @@
+
 """
 database.py
-Three separate tables now -- air_readings, water_readings, soil_readings --
-instead of one shared table with a domain column. Same columns in each:
-id, source, inputs, prediction, timestamp.
+
+Manages database operations for the Environmental Pollution
+Prediction and Monitoring System.
+
+The database stores air, water, and soil prediction records
+in separate tables:
+    - air_readings
+    - water_readings
+    - soil_readings
+
+Each table stores the relevant record ID, source, input values,
+prediction result, and timestamp.
 """
+
 
 import sqlite3
 import json
