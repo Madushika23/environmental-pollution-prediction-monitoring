@@ -1,11 +1,23 @@
+
 """
 soil.py
-Soil fertility prediction route.
 
-Loads the trained XGBoost model (models/soil_model.pkl). Predicts
-Less Fertile / Fertile / Highly Fertile from 12 soil chemistry values:
-N, P, K, pH, EC, OC, S, Zn, Fe, Cu, Mn, B.
+Defines API routes for soil fertility prediction.
+
+The module loads the trained XGBoost model from
+models/soil_model.pkl and uses soil chemistry measurements
+to predict one of three fertility classes:
+
+- Less Fertile
+- Fertile
+- Highly Fertile
+
+The input features are nitrogen (N), phosphorus (P),
+potassium (K), pH, electrical conductivity (EC), organic
+carbon (OC), sulfur (S), zinc (Zn), iron (Fe), copper (Cu),
+manganese (Mn), and boron (B).
 """
+
 
 import os
 import joblib
