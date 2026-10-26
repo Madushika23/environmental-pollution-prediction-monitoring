@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Air Quality</title>
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+</head>
+<body>
+<nav class="topnav">
+  <a href="index.html">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></svg>
+    Home
+  </a>
+  <a href="air.html" class="active">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6.5 19a4.5 4.5 0 0 1-1.4-8.77A5.5 5.5 0 0 1 15.9 7.02 4.5 4.5 0 0 1 17.5 19h-11Z"/></svg>
+    Air
+  </a>
+  <a href="water.html">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2s6 7.5 6 12a6 6 0 1 1-12 0c0-4.5 6-12 6-12Z"/></svg>
+    Water
+  </a>
+  <a href="soil.html">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 20A7 7 0 0 1 4 13c0-4 3-8 9-9 0 6 4 7 4 11a6 6 0 0 1-6 6Z"/><path d="M4 13c2 0 4 1 5 3"/></svg>
+    Soil
+  </a>
+  <a href="other.html">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+    Other
+  </a>
+</nav>
+
+<header class="page-header header-air">
+  <h1>Air Quality</h1>
+  <p>Predicts PM2.5 and pollution category from weather and pollutant readings.</p>
+</header>
+
+<main>
+
+  <section class="domain-intro">
+    <p><strong>PM2.5</strong> refers to fine particulate matter 2.5 micrometers or smaller &mdash; small enough to enter the lungs and bloodstream, which is why it's the primary indicator used worldwide for air quality health risk. This model takes ten weather and pollutant readings and predicts a PM2.5 value (in &micro;g/m&sup3;, micrograms per cubic meter), then classifies it into one of six standard air quality categories (Good through Hazardous) using international WHO/EPA breakpoints. Live mode fetches current conditions for either of Sri Lanka's two official monitoring locations; Demo mode lets you type in any values to test the model. The system also auto-collects a fresh Live reading for both stations every 15 minutes in the background, independent of anyone using the site.</p>
+    <ol class="steps-list">
+      <li><span class="step-num">1</span> Pick Live or Demo below.</li>
+      <li><span class="step-num">2</span> In Live mode, the map shows both stations' most recent saved reading &mdash; pick a station underneath to follow its live feed, which updates automatically every 30 seconds.</li>
+      <li><span class="step-num">3</span> Readings are auto-collected and saved in the background every 15 minutes for both stations, feeding the Forecast and trend chart, whether or not anyone's watching. Demo readings are never saved.</li>
+    </ol>
+  </section>
+
+  <div class="mode-card-grid">
+    <button type="button" class="mode-card active" data-target="panel-live">
+      <span class="icon">&#128225;</span>
+      <h3>Live</h3>
+      <p>Colombo or Kandy. Saved &mdash; feeds the Forecast page.</p>
+    </button>
+    <button type="button" class="mode-card" data-target="panel-demo">
+      <span class="icon">&#128190;</span>
+      <h3>Demo</h3>
+      <p>Type in your own values. Not saved &mdash; for testing and demonstration.</p>
+    </button>
+  </div>
+
+  <div id="panel-live" class="mode-panel active">
+    <div class="panel">
+      <div id="station-map" class="station-map"></div>
+      <div class="station-toggle">
+        <button type="button" class="station-btn active" data-station="colombo">Colombo</button>
+        <button type="button" class="station-btn" data-station="kandy">Kandy</button>
+      </div>
+
+      <div id="live-widget" class="live-widget">
+        <div class="live-widget-header">
+          <span id="live-widget-dot" class="live-dot"></span>
+          <span>LIVE &middot; <span id="live-widget-station">Colombo</span></span>
+        </div>
+        <div id="live-widget-body" class="live-widget-body"></div>
+        <button type="button" id="live-widget-toggle" class="live-widget-toggle">Stop live feed</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="panel-demo" class="mode-panel">
+    <form id="air-demo-form">
+      <div class="field-grid">
+        <label>Sulfur Dioxide, SO2 (&micro;g/m&sup3;) <input type="number" step="any" id="SO2" required></label>
+        <label>Nitrogen Dioxide, NO2 (&micro;g/m&sup3;) <input type="number" step="any" id="NO2" required></label>
+        <label>Carbon Monoxide, CO (&micro;g/m&sup3;) <input type="number" step="any" id="CO" required></label>
+        <label>Ozone, O3 (&micro;g/m&sup3;) <input type="number" step="any" id="O3" required></label>
+        <label>Temperature (&deg;C) <input type="number" step="any" id="TEMP" required></label>
+        <label>Atmospheric Pressure (hPa) <input type="number" step="any" id="PRES" required></label>
+        <label>Dew Point (&deg;C) <input type="number" step="any" id="DEWP" required></label>
+        <label>Rainfall (mm) <input type="number" step="any" id="RAIN" required></label>
+        <label>Wind Direction
+          <select id="wd" required>
+            <option value="N">North (N)</option>
+            <option value="NNE">North-Northeast (NNE)</option>
+            <option value="NE">Northeast (NE)</option>
+            <option value="ENE">East-Northeast (ENE)</option>
+            <option value="E">East (E)</option>
+            <option value="ESE">East-Southeast (ESE)</option>
+            <option value="SE">Southeast (SE)</option>
+            <option value="SSE">South-Southeast (SSE)</option>
+            <option value="S">South (S)</option>
+            <option value="SSW">South-Southwest (SSW)</option>
+            <option value="SW">Southwest (SW)</option>
+            <option value="WSW">West-Southwest (WSW)</option>
+            <option value="W">West (W)</option>
+            <option value="WNW">West-Northwest (WNW)</option>
+            <option value="NW">Northwest (NW)</option>
+            <option value="NNW">North-Northwest (NNW)</option>
+          </select>
+        </label>
+        <label>Wind Speed (m/s) <input type="number" step="any" id="WSPM" required></label>
+      </div>
+      <button type="submit">Predict PM2.5 (not saved)</button>
+    </form>
+
+    <div id="air-demo-result" class="result"></div>
+  </div>
+
+</main>
+
+<script src="main.js"></script>
+<script>
+const STATIONS_GEO = {
+  colombo: { label: "Colombo", lat: 6.9271, lon: 79.8612 },
+  kandy:   { label: "Kandy",   lat: 7.2906, lon: 80.6337 },
+};
+
+const CATEGORY_COLOR = {
+  "Good": "#1a7f37",
+  "Moderate": "#9a7d0a",
+  "Unhealthy for Sensitive Groups": "#c2570d",
+  "Unhealthy": "#b3261e",
+  "Very Unhealthy": "#7c3aab",
+  "Hazardous": "#6e1423",
+};
+
+async function loadStationMap() {
+  const map = L.map("station-map", { scrollWheelZoom: false }).setView([7.1, 80.2], 7);
+  L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+    attribution: "&copy; OpenStreetMap contributors",
+    maxZoom: 12,
+  }).addTo(map);
+
+  let rows = [];
+  try {
+    const res = await fetch("http://127.0.0.1:5000/api/air/history");
+    rows = await res.json();
+  } catch (err) {
+    rows = [];
+  }
+
+  const latestByStation = {};
+  rows.forEach(r => {
+    const station = (r.inputs && r.inputs.station) || "colombo";
+    if (!latestByStation[station] || r.timestamp > latestByStation[station].timestamp) {
+      latestByStation[station] = r;
+    }
+  });
+
+  Object.entries(STATIONS_GEO).forEach(([key, geo]) => {
+    const latest = latestByStation[key];
+    const category = latest ? latest.prediction.category : null;
+    const color = category ? (CATEGORY_COLOR[category] || "#5b6b7c") : "#9aa5b1";
+
+    const marker = L.circleMarker([geo.lat, geo.lon], {
+      radius: 12,
+      fillColor: color,
+      color: "#ffffff",
+      weight: 2,
+      fillOpacity: 0.9,
+    }).addTo(map);
+
+    const popupText = latest
+      ? `<strong>${geo.label}</strong><br>${category} (PM2.5 ${latest.prediction.predicted_pm25})<br><span style="color:#5b6b7c;font-size:0.8rem;">${latest.timestamp.replace("T", " ").slice(0, 16)}</span>`
+      : `<strong>${geo.label}</strong><br>No live reading saved yet`;
+
+    marker.bindPopup(popupText);
+  });
+}
+
+if (document.getElementById("station-map")) {
+  loadStationMap();
+}
+</script>
+</body>
+</html>

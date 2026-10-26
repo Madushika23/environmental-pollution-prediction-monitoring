@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Water Quality</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<nav class="topnav">
+  <a href="index.html">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></svg>
+    Home
+  </a>
+  <a href="air.html">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6.5 19a4.5 4.5 0 0 1-1.4-8.77A5.5 5.5 0 0 1 15.9 7.02 4.5 4.5 0 0 1 17.5 19h-11Z"/></svg>
+    Air
+  </a>
+  <a href="water.html" class="active">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2s6 7.5 6 12a6 6 0 1 1-12 0c0-4.5 6-12 6-12Z"/></svg>
+    Water
+  </a>
+  <a href="soil.html">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 20A7 7 0 0 1 4 13c0-4 3-8 9-9 0 6 4 7 4 11a6 6 0 0 1-6 6Z"/><path d="M4 13c2 0 4 1 5 3"/></svg>
+    Soil
+  </a>
+  <a href="other.html">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+    Other
+  </a>
+</nav>
+<header class="page-header header-water">
+  <h1>Water Quality</h1>
+  <p>Predicts drinking-water safety from temperature, conductivity, and pH.</p>
+</header>
+
+<main>
+
+  <section class="domain-intro">
+    <p>This model takes temperature, conductivity, and pH and classifies the water as Safe or Unsafe to drink. It was trained to approximate a rule that also considers dissolved oxygen and fecal coliform &mdash; those need lab testing, so the live model works from the three values a low-cost sensor could realistically provide.</p>
+    <ol class="steps-list">
+      <li><span class="step-num">1</span> Check the IoT Live tab for real sensor data, or use Demo to type in your own values.</li>
+      <li><span class="step-num">2</span> Get a Safe/Unsafe prediction.</li>
+      <li><span class="step-num">3</span> IoT readings come from the ESP32 sensor board automatically; a snapshot is saved every 15 minutes. Demo readings are not saved.</li>
+    </ol>
+  </section>
+
+  <div class="mode-card-grid">
+    <button type="button" class="mode-card active" data-target="panel-iot">
+      <span class="icon">&#128225;</span>
+      <h3>IoT Live</h3>
+      <p>Real sensor readings from the ESP32, updates automatically.</p>
+    </button>
+    <button type="button" class="mode-card" data-target="panel-demo">
+      <span class="icon">&#128190;</span>
+      <h3>Demo</h3>
+      <p>Type in your own values. Not saved &mdash; for testing and demonstration.</p>
+    </button>
+  </div>
+
+  <div id="panel-demo" class="mode-panel">
+    <form id="water-form">
+      <div class="field-grid">
+        <label>Temperature (&deg;C) <input type="number" step="any" id="temperature" required></label>
+        <label>Conductivity (&micro;S/cm) <input type="number" step="any" id="conductivity" required></label>
+        <label>pH <input type="number" step="any" id="ph" required></label>
+      </div>
+      <button type="submit">Predict</button>
+    </form>
+
+    <div id="water-result" class="result"></div>
+  </div>
+
+  <div id="panel-iot" class="mode-panel active">
+    <div class="panel">
+      <p class="muted">Showing the most recent reading sent by the ESP32 sensor board. Refreshes automatically every 30 seconds while this tab is open.</p>
+      <div id="iot-water-result" class="result">Waiting for a reading from the sensor&hellip;</div>
+    </div>
+  </div>
+
+</main>
+
+<script src="main.js"></script>
+</body>
+</html>

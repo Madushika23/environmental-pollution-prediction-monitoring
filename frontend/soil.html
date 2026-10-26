@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Soil Quality</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<nav class="topnav">
+  <a href="index.html">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></svg>
+    Home
+  </a>
+  <a href="air.html">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6.5 19a4.5 4.5 0 0 1-1.4-8.77A5.5 5.5 0 0 1 15.9 7.02 4.5 4.5 0 0 1 17.5 19h-11Z"/></svg>
+    Air
+  </a>
+  <a href="water.html">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2s6 7.5 6 12a6 6 0 1 1-12 0c0-4.5 6-12 6-12Z"/></svg>
+    Water
+  </a>
+  <a href="soil.html">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 20A7 7 0 0 1 4 13c0-4 3-8 9-9 0 6 4 7 4 11a6 6 0 0 1-6 6Z"/><path d="M4 13c2 0 4 1 5 3"/></svg>
+    Soil
+  </a>
+  <a href="other.html">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+    Other
+  </a>
+</nav>
+
+<header class="page-header header-soil">
+  <h1>Soil Quality</h1>
+  <p>Predicts fertility from 12 soil chemistry values.</p>
+</header>
+
+<main>
+
+  <section class="domain-intro">
+    <p>This model takes 12 soil chemistry values &mdash; nutrients (N, P, K), pH, conductivity, organic carbon, and four micronutrients &mdash; and classifies overall fertility as Less Fertile, Fertile, or Highly Fertile.</p>
+    <ol class="steps-list">
+      <li><span class="step-num">1</span> Enter all 12 values from a soil test below.</li>
+      <li><span class="step-num">2</span> Get a fertility prediction.</li>
+      <li><span class="step-num">3</span> Every reading here is saved to the database automatically.</li>
+    </ol>
+  </section>
+
+  <form id="soil-form">
+    <div class="field-grid">
+      <label>Nitrogen - N (kg/ha) <input type="number" step="any" id="N" required></label>
+      <label>Phosphorus - P (kg/ha) <input type="number" step="any" id="P" required></label>
+      <label>Potassium - K (kg/ha) <input type="number" step="any" id="K" required></label>
+      <label>pH <input type="number" step="any" id="pH" required></label>
+      <label>Electrical Conductivity - EC (dS/m) <input type="number" step="any" id="EC" required></label>
+      <label>Organic Carbon - OC (%) <input type="number" step="any" id="OC" required></label>
+      <label>Sulfur - S (ppm) <input type="number" step="any" id="S" required></label>
+      <label>Zinc - Zn (ppm) <input type="number" step="any" id="Zn" required></label>
+      <label>Iron - Fe (ppm) <input type="number" step="any" id="Fe" required></label>
+      <label>Copper - Cu (ppm) <input type="number" step="any" id="Cu" required></label>
+      <label>Manganese - Mn (ppm) <input type="number" step="any" id="Mn" required></label>
+      <label>Boron - B (ppm) <input type="number" step="any" id="B" required></label>
+    </div>
+    <button type="submit">Predict Fertility</button>
+  </form>
+
+  <div id="soil-result" class="result"></div>
+
+</main>
+
+<script src="main.js"></script>
+</body>
+</html>

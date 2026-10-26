@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pollution Prediction System</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<nav class="topnav">
+  <a href="index.html">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></svg>
+    Home
+  </a>
+  <a href="air.html">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6.5 19a4.5 4.5 0 0 1-1.4-8.77A5.5 5.5 0 0 1 15.9 7.02 4.5 4.5 0 0 1 17.5 19h-11Z"/></svg>
+    Air
+  </a>
+  <a href="water.html">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2s6 7.5 6 12a6 6 0 1 1-12 0c0-4.5 6-12 6-12Z"/></svg>
+    Water
+  </a>
+  <a href="soil.html">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 20A7 7 0 0 1 4 13c0-4 3-8 9-9 0 6 4 7 4 11a6 6 0 0 1-6 6Z"/><path d="M4 13c2 0 4 1 5 3"/></svg>
+    Soil
+  </a>
+  <a href="other.html">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+    Other
+  </a>
+</nav>
+
+<header class="page-header header-home">
+  <h1>Environmental Pollution Trend &amp; Risk Prediction System</h1>
+  <p>Sri Lanka air, water, and soil monitoring</p>
+</header>
+
+<main class="card-grid">
+  <a class="card card-air" href="air.html">
+    <span class="icon-badge">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M6.5 19a4.5 4.5 0 0 1-1.4-8.77A5.5 5.5 0 0 1 15.9 7.02 4.5 4.5 0 0 1 17.5 19h-11Z"/>
+      </svg>
+    </span>
+    <h2>Air Quality</h2>
+    <p>Live reading near Colombo and Kandy or a Demo mode to type in your own values. Predicts PM2.5 and pollution category.</p>
+  </a>
+  <a class="card card-water" href="water.html">
+    <span class="icon-badge">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 2s6 7.5 6 12a6 6 0 1 1-12 0c0-4.5 6-12 6-12Z"/>
+      </svg>
+    </span>
+    <h2>Water Quality</h2>
+    <p>Demo mode now, live sensor feed coming soon. Predicts drinking-water safety from temperature, conductivity and pH.</p>
+  </a>
+  <a class="card card-soil" href="soil.html">
+    <span class="icon-badge">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M11 20A7 7 0 0 1 4 13c0-4 3-8 9-9 0 6 4 7 4 11a6 6 0 0 1-6 6Z"/>
+        <path d="M4 13c2 0 4 1 5 3"/>
+      </svg>
+    </span>
+    <h2>Soil Quality</h2>
+    <p>Enter 12 soil chemistry values to predict fertility. Saved to the database.</p>
+  </a>
+  <a class="card card-other" href="other.html">
+    <span class="icon-badge">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="18" y1="20" x2="18" y2="10"/>
+        <line x1="12" y1="20" x2="12" y2="4"/>
+        <line x1="6" y1="20" x2="6" y2="14"/>
+      </svg>
+    </span>
+    <h2>Other</h2>
+    <p>Forecasting, feature importance, and saved-data trends across all three domains.</p>
+  </a>
+</main>
+
+<section class="home-footer">
+  <h2>Why this matters</h2>
+  <p>Sri Lanka currently has just two official air quality monitoring stations nationwide, and water and soil testing both rely on manual lab sampling that takes days to come back. This system checks all three continuously, classifies results the moment they come in, and forecasts what's coming next.</p>
+  <div class="stat-row">
+    <div class="stat"><strong>2</strong><span>Official air stations, nationwide</span></div>
+    <div class="stat"><strong>3</strong><span>Domains checked here</span></div>
+    <div class="stat"><strong>Instant</strong><span>Results, no lab wait</span></div>
+  </div>
+</section>
+
+</body>
+</html>

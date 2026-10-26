@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Other — Forecast, Insights, Saved Data</title>
+<link rel="stylesheet" href="style.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+</head>
+<body>
+<nav class="topnav">
+  <a href="index.html">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></svg>
+    Home
+  </a>
+  <a href="air.html">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6.5 19a4.5 4.5 0 0 1-1.4-8.77A5.5 5.5 0 0 1 15.9 7.02 4.5 4.5 0 0 1 17.5 19h-11Z"/></svg>
+    Air
+  </a>
+  <a href="water.html">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2s6 7.5 6 12a6 6 0 1 1-12 0c0-4.5 6-12 6-12Z"/></svg>
+    Water
+  </a>
+  <a href="soil.html">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 20A7 7 0 0 1 4 13c0-4 3-8 9-9 0 6 4 7 4 11a6 6 0 0 1-6 6Z"/><path d="M4 13c2 0 4 1 5 3"/></svg>
+    Soil
+  </a>
+  <a href="other.html">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+    Other
+  </a>
+</nav>
+
+<header class="page-header header-other">
+  <h1>Other</h1>
+  <p>Forecasting, model insights, and saved-data across all three domains.</p>
+</header>
+
+<main class="wide">
+
+  <section class="domain-intro">
+    <p>Everything here reads from the same database that Air, Water, and Soil save to. Forecast predicts tomorrow's air quality from your saved history; Insights shows which inputs each model relies on most, plus the air quality trend for Colombo and Kandy; Saved Data lists every reading. Clearing or deleting data now requires an admin key.</p>
+    <ol class="steps-list">
+      <li><span class="step-num">1</span> Pick a mode below.</li>
+      <li><span class="step-num">2</span> Forecast currently works for Air and, once there's 10+ distinct saved days, Soil and Water too.</li>
+      <li><span class="step-num">3</span> Saved Data lets you review any reading; clearing or deleting now asks for your admin key first.</li>
+    </ol>
+  </section>
+
+  <div class="mode-card-grid">
+    <button type="button" class="mode-card active" data-target="panel-forecast">
+      <span class="icon">&#128200;</span>
+      <h3>Forecast</h3>
+      <p>Predicts tomorrow and the day after for Air.</p>
+    </button>
+    <button type="button" class="mode-card" data-target="panel-insights">
+      <span class="icon">&#127919;</span>
+      <h3>Insights</h3>
+      <p>Feature importance, plus the Colombo/Kandy trend chart.</p>
+    </button>
+    <button type="button" class="mode-card" data-target="panel-saved">
+      <span class="icon">&#128202;</span>
+      <h3>Saved Data</h3>
+      <p>Every saved reading, across all domains.</p>
+    </button>
+  </div>
+
+  <div id="panel-forecast" class="mode-panel active">
+    <section class="panel">
+      <button id="forecast-air-btn" class="live-btn">Forecast Air (Tomorrow &amp; Day After)</button>
+      <div id="forecast-result" class="result"></div>
+    </section>
+  </div>
+
+  <div id="panel-insights" class="mode-panel">
+    <section class="panel">
+      <h2>Feature Importance</h2>
+      <div class="clear-buttons">
+        <button id="fi-air-btn" class="live-btn">Air</button>
+        <button id="fi-water-btn" class="live-btn">Water</button>
+        <button id="fi-soil-btn" class="live-btn">Soil</button>
+      </div>
+      <div id="fi-result" class="result"></div>
+    </section>
+
+    <section class="chart-card" style="margin-top:24px;">
+      <h3>Air Quality Trend</h3>
+      <p class="muted">Daily average PM2.5, Colombo vs Kandy. Days with more than one reading are averaged into a single point per station.</p>
+      <canvas id="air-trend-chart" height="110"></canvas>
+    </section>
+  </div>
+
+  <div id="panel-saved" class="mode-panel">
+    <section class="panel">
+      <h2>Saved Readings</h2>
+      <div class="clear-buttons">
+        <button id="clear-air" class="danger-btn">Clear Air Data</button>
+        <button id="clear-water" class="danger-btn">Clear Water Data</button>
+        <button id="clear-soil" class="danger-btn">Clear Soil Data</button>
+        <button id="clear-all" class="danger-btn">Clear Everything</button>
+      </div>
+      <table id="history-table">
+        <thead>
+          <tr><th>ID</th><th>Domain</th><th>Source</th><th>Prediction</th><th>Timestamp</th><th></th></tr>
+        </thead>
+        <tbody id="history-body"></tbody>
+      </table>
+    </section>
+  </div>
+
+</main>
+
+<script src="main.js"></script>
+<script>
+const API_BASE_H = "http://127.0.0.1:5000";
+
+function promptAdminKey() {
+  return prompt("Enter admin key to confirm this action:");
+}
+
+async function adminDelete(url) {
+  const key = promptAdminKey();
+  if (!key) return false;
+  const res = await fetch(API_BASE_H + url, {
+    method: "DELETE",
+    headers: { "X-Admin-Key": key },
+  });
+  if (res.status === 401) {
+    alert("Wrong admin key -- nothing was deleted.");
+    return false;
+  }
+  return true;
+}
+
+/* ---------- Forecast ---------- */
+async function getForecast(domain) {
+  const el = document.getElementById("forecast-result");
+  el.className = "result";
+  el.textContent = "Loading forecast...";
+  try {
+    const res = await fetch(API_BASE_H + "/api/" + domain + "/forecast");
+
+    if (!res.ok) {
+      let data = null;
+      try { data = await res.json(); } catch (e) { data = null; }
+
+      el.textContent = "";
+      showToast(
+        "Forecast unavailable",
+        data && data.message
+          ? data.message
+          : "The forecasting service is currently unavailable. Please try again later.",
+        res.status >= 500 ? "bad" : "warn"
+      );
+      return;
+    }
+
+    const data = await res.json();
+    if (!data.ready) {
+      el.textContent = "";
+      showToast(
+        "Not enough data",
+        data.message || "More historical data is required to generate a forecast. Please continue collecting data.",
+        "warn"
+      );
+      return;
+    }
+
+    const labels = ["Tomorrow", "Day after tomorrow"];
+    el.innerHTML = data.forecast.map((f, i) => `
+      <p><strong>${labels[i] || f.date}</strong> (${f.date}): PM2.5 &asymp; ${f.predicted_value} &micro;g/m&sup3;
+      ${f.aqi_sl !== undefined ? ' &mdash; AQI-SL ' + f.aqi_sl + ' (' + f.category + ')' : ''}</p>
+    `).join("");
+  } catch (err) {
+    el.textContent = "";
+    showToast(
+      "Forecast unavailable",
+      "The forecasting service is currently unavailable. Please try again later.",
+      "bad"
+    );
+  }
+}
+document.getElementById("forecast-air-btn").addEventListener("click", () => getForecast("air"));
+
+/* ---------- Feature importance ---------- */
+async function getFeatureImportance(domain) {
+  const el = document.getElementById("fi-result");
+  el.className = "result";
+  el.textContent = "Loading...";
+
+  try {
+    const res = await fetch(API_BASE_H + "/api/" + domain + "/feature-importance");
+    const data = await res.json();
+
+    if (!Array.isArray(data)) {
+      el.textContent = "";
+      showToast(
+        "Feature importance unavailable",
+        data.error || "The feature-importance data could not be loaded. Please try again.",
+        "warn"
+      );
+      return;
+    }
+
+    const maxImportance = Math.max(...data.map(d => d.importance), 0.0001);
+    const title = domain.charAt(0).toUpperCase() + domain.slice(1);
+
+    el.innerHTML = `<h3>${title}</h3><div class="fi-chart">` +
+      data.map(d => `
+        <div class="fi-row">
+          <span class="fi-label">${d.feature}</span>
+          <div class="fi-bar-track">
+            <div class="fi-bar" style="width:${(d.importance / maxImportance * 100).toFixed(1)}%"></div>
+          </div>
+          <span class="fi-value">${(d.importance * 100).toFixed(1)}%</span>
+        </div>
+      `).join("") + `</div>`;
+  } catch (err) {
+    el.textContent = "";
+    showToast(
+      "Feature importance unavailable",
+      "The feature-importance explanation could not be generated at this time. Please try again shortly.",
+      "bad"
+    );
+  }
+}
+document.getElementById("fi-air-btn").addEventListener("click", () => getFeatureImportance("air"));
+document.getElementById("fi-water-btn").addEventListener("click", () => getFeatureImportance("water"));
+document.getElementById("fi-soil-btn").addEventListener("click", () => getFeatureImportance("soil"));
+
+/* ---------- Air trend chart: Colombo vs Kandy ---------- */
+let airTrendChart = null;
+
+function renderAirTrend(rows) {
+  const canvas = document.getElementById("air-trend-chart");
+  if (!canvas) return;
+
+  const airRows = rows.filter(
+    r => r.domain === "air" && r.prediction && r.prediction.predicted_pm25 !== undefined
+  );
+
+  const byStationDate = { colombo: {}, kandy: {} };
+  airRows.forEach(r => {
+    const station = (r.inputs && r.inputs.station) || "colombo";
+    const date = r.timestamp.slice(0, 10);
+    if (!byStationDate[station]) byStationDate[station] = {};
+    (byStationDate[station][date] = byStationDate[station][date] || []).push(r.prediction.predicted_pm25);
+  });
+
+  const allDates = Array.from(new Set([
+    ...Object.keys(byStationDate.colombo),
+    ...Object.keys(byStationDate.kandy),
+  ])).sort();
+
+  if (allDates.length === 0) {
+    if (airTrendChart) { airTrendChart.destroy(); airTrendChart = null; }
+    const ctx = canvas.getContext("2d");
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    if (!document.getElementById("air-trend-empty")) {
+      canvas.insertAdjacentHTML(
+        "afterend",
+        '<p class="muted" id="air-trend-empty">No live air readings saved yet.</p>'
+      );
+    }
+    return;
+  }
+  document.getElementById("air-trend-empty")?.remove();
+
+  function averagesFor(station) {
+    return allDates.map(d => {
+      const vals = byStationDate[station][d];
+      if (!vals) return null;
+      return Math.round((vals.reduce((a, b) => a + b, 0) / vals.length) * 10) / 10;
+    });
+  }
+
+  const airColor = getComputedStyle(document.documentElement).getPropertyValue("--air-color").trim() || "#2563eb";
+  const airSoft = getComputedStyle(document.documentElement).getPropertyValue("--air-soft").trim() || "#dbe6fd";
+  const kandyColor = getComputedStyle(document.documentElement).getPropertyValue("--soil-color").trim() || "#a3600a";
+
+  if (airTrendChart) airTrendChart.destroy();
+  airTrendChart = new Chart(canvas, {
+    type: "line",
+    data: {
+      labels: allDates,
+      datasets: [
+        {
+          label: "Colombo (avg PM2.5)",
+          data: averagesFor("colombo"),
+          borderColor: airColor,
+          backgroundColor: airSoft,
+          fill: true,
+          tension: 0.3,
+          pointRadius: 4,
+          pointBackgroundColor: airColor,
+          spanGaps: true,
+        },
+        {
+          label: "Kandy (avg PM2.5)",
+          data: averagesFor("kandy"),
+          borderColor: kandyColor,
+          backgroundColor: "transparent",
+          fill: false,
+          tension: 0.3,
+          pointRadius: 4,
+          pointBackgroundColor: kandyColor,
+          spanGaps: true,
+        },
+      ]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { display: true, position: "top" },
+        tooltip: { callbacks: { label: (ctx) => `${ctx.dataset.label}: ${ctx.parsed.y}` } }
+      },
+      scales: {
+        y: { beginAtZero: true, title: { display: true, text: "PM2.5 (µg/m³)" } },
+        x: { title: { display: true, text: "Date" } }
+      }
+    }
+  });
+}
+
+document.querySelector('[data-target="panel-insights"]')?.addEventListener("click", () => {
+  if (airTrendChart) airTrendChart.resize();
+});
+
+/* ---------- Saved data table ---------- */
+async function loadHistory() {
+  const body = document.getElementById("history-body");
+  try {
+    const res = await fetch(API_BASE_H + "/api/admin/all");
+    const rows = await res.json();
+
+    renderAirTrend(rows);
+
+    if (rows.length === 0) {
+      body.innerHTML = '<tr><td colspan="6" class="muted">No data saved yet.</td></tr>';
+      return;
+    }
+
+    body.innerHTML = rows.map(r => `
+      <tr>
+        <td>${r.id}</td>
+        <td>${r.domain}</td>
+        <td>${r.source}</td>
+        <td>${r.prediction.category}${r.prediction.predicted_pm25 !== undefined ? ' (' + r.prediction.predicted_pm25 + ')' : ''}</td>
+        <td>${r.timestamp.replace('T', ' ').slice(0, 19)}</td>
+        <td><button class="row-delete" data-domain="${r.domain}" data-id="${r.id}">Delete</button></td>
+      </tr>
+    `).join("");
+
+    document.querySelectorAll(".row-delete").forEach(btn => {
+      btn.addEventListener("click", async () => {
+        const ok = await adminDelete("/api/admin/delete/" + btn.dataset.domain + "/" + btn.dataset.id);
+        if (ok) loadHistory();
+      });
+    });
+  } catch (err) {
+    body.innerHTML = '';
+    showToast(
+      "Saved data unavailable",
+      "The saved readings could not be loaded. Please check that the backend is running and try again.",
+      "bad"
+    );
+  }
+}
+
+document.getElementById("clear-air").addEventListener("click", async () => {
+  const ok = await adminDelete("/api/admin/clear/air");
+  if (ok) loadHistory();
+});
+document.getElementById("clear-water").addEventListener("click", async () => {
+  const ok = await adminDelete("/api/admin/clear/water");
+  if (ok) loadHistory();
+});
+document.getElementById("clear-soil").addEventListener("click", async () => {
+  const ok = await adminDelete("/api/admin/clear/soil");
+  if (ok) loadHistory();
+});
+document.getElementById("clear-all").addEventListener("click", async () => {
+  if (!confirm("Delete every saved reading, all domains? This cannot be undone.")) return;
+  const ok = await adminDelete("/api/admin/clear-all");
+  if (ok) loadHistory();
+});
+
+loadHistory();
+</script>
+</body>
+</html>
