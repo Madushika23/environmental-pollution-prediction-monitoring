@@ -1,10 +1,18 @@
+
 """
 live_fetch.py
-Pulls real, current weather and air pollution readings from OpenWeatherMap
-for a chosen Sri Lankan station, using the OPENWEATHER_API_KEY already in
-your .env file. Both endpoints come from the same provider, same key,
-consistent units -- so no need to juggle WAQI/OpenAQ separately for this.
+
+Retrieves current weather and air pollution data from
+OpenWeatherMap for selected locations in Sri Lanka.
+
+The module uses the OpenWeatherMap API and the
+OPENWEATHER_API_KEY environment variable configured for
+the application.
+
+The retrieved data is used as input for air quality
+prediction and monitoring.
 """
+
 
 import os
 import math
