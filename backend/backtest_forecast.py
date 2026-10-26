@@ -1,21 +1,24 @@
+
 """
 backtest_forecast.py
-Measures how accurate the Air forecast actually is, using YOUR real data.
 
-How it works: hides the last few real days from Prophet, asks it to
-forecast those hidden days, then compares the guesses to what was
-actually recorded. This is the standard way to honestly measure a
-forecasting model -- never trust accuracy measured on days the model
-already saw during training.
+Evaluates the accuracy of the air quality forecasting model
+using historical air quality data.
 
-Run from inside backend/:
+The script uses Prophet to forecast a held-out period and
+compares the predicted values with the actual recorded values.
+This helps evaluate forecasting performance on data that was
+not used to train the model.
+
+Run from the backend directory:
     python backtest_forecast.py
 
-Needs at least (TEST_DAYS + MIN_TRAIN_DAYS) distinct days of air
-history to run at all -- if you get an error about not enough data,
-lower TEST_DAYS below, or just keep using the app daily and try again
-later.
+Sufficient historical data is required for both training and
+testing. If there is not enough data, reduce TEST_DAYS if
+appropriate or collect more daily readings before running
+the evaluation again.
 """
+
 
 import pandas as pd
 from database import get_history
