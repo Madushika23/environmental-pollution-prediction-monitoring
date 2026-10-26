@@ -1,27 +1,25 @@
+
 """
-app.py
-Flask entry point. Wires together the database, the three domain routes
-(each of which loads its own model), forecasting, an admin API, and
-serves the frontend itself -- so the whole site is one deployable app
-with one URL.
+Main entry point for the Environmental Pollution Prediction
+and Monitoring System.
 
-This file does NOT load any .pkl models directly -- that happens inside
-routes/air.py, routes/water.py, and routes/soil.py, each next to its
-own model file.
+This file initializes the Flask application, connects the database,
+registers the air, water, and soil routes, and serves the frontend.
 
-Destructive admin actions (clear/delete) require a shared secret key
-(ADMIN_KEY, set in .env) sent as an X-Admin-Key header. Viewing saved
-data stays open since it's read-only and isn't the risk.
+The individual route files load their respective machine learning
+models. The application also supports forecasting and admin functions.
 
-A background thread also auto-collects a fresh Air reading for both
-Colombo and Kandy every 15 minutes, independent of anyone using the site.
-Water no longer needs a periodic snapshot here -- every IoT reading is
-now saved immediately in routes/water.py's live-peek route.
+The background process collects air quality readings for Colombo
+and Kandy every 15 minutes. Water sensor readings are saved when
+received through the relevant route.
 
-Run from inside the backend/ folder:
+To run the application:
     python app.py
-Then open http://127.0.0.1:5000 in a browser.
+
+Run this command from the backend folder and open:
+    http://127.0.0.1:5000
 """
+
 
 import os
 import threading
