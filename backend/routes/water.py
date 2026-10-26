@@ -1,24 +1,37 @@
+
 """
 water.py
-Water quality prediction route.
 
-Loads the trained XGBoost model (models/water_model.pkl) and its label
-encoder (models/water_label_encoder.pkl). Predicts Safe/Unsafe from
-Temperature, Conductivity, and pH -- DO, BOD, and Fecal Coliform are
-part of the original Safe/Unsafe labeling rule (see 02_water_quality.ipynb)
-but are not sensed here, since they require lab/chemical testing rather
-than a cheap analog sensor. pH is included because it's directly part
-of that labeling rule and is cheaply sensed (PH4502C module).
+Defines API routes for water quality prediction and live
+monitoring.
 
-/api/water/predict     -- manual Demo entries, or any client that wants
-                           to save a reading. Always saves.
-/api/water/live-peek   -- used by the ESP32 sensor board, posted
-                           frequently. Predicts, updates the in-memory
-                           "latest reading" cache for instant display,
-                           AND saves every reading to the database.
-/api/water/live-latest -- used by the water.html IoT Live panel to poll
-                           for the current cached reading.
+The module loads the trained XGBoost model from
+models/water_model.pkl and the associated label encoder
+from models/water_label_encoder.pkl.
+
+The model predicts whether water is classified as Safe
+or Unsafe using temperature, conductivity, and pH.
+
+The original dataset's labeling rule also considers dissolved
+oxygen (DO), biochemical oxygen demand (BOD), and fecal
+coliform. These measurements are not included in the current
+sensor inputs because they require additional testing.
+
+Available routes:
+
+- /api/water/predict:
+  Generates a prediction from supplied input values and
+  saves the reading.
+
+- /api/water/live-peek:
+  Processes an incoming IoT sensor reading, updates the
+  latest-reading cache, and saves the reading to the database.
+
+- /api/water/live-latest:
+  Returns the latest cached reading for the water monitoring
+  interface.
 """
+
 
 import os
 import joblib
