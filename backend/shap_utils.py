@@ -1,12 +1,18 @@
+
 """
 shap_utils.py
-Shared instance-level explainability helper using SHAP's TreeExplainer.
 
-This is different from Feature Importance (which shows what a model
-relies on in general, across all its training data). This explains why
-ONE SPECIFIC prediction came out the way it did -- which inputs pushed
-it toward that result, and which pushed against it.
+Provides prediction-explanation utilities using SHAP
+(SHapley Additive exPlanations).
+
+The module helps explain individual model predictions by
+showing how input features contribute to the prediction.
+
+These explanations complement overall feature importance
+by focusing on the contribution of features to a specific
+prediction.
 """
+
 
 import numpy as np
 import shap
