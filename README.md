@@ -1,6 +1,6 @@
 # Environmental Pollution Prediction and Monitoring System
 
-## About the Project
+## Project Overview
 
 The Environmental Pollution Prediction and Monitoring System is a web-based application developed to monitor and predict environmental pollution levels in air, water, and soil.
 
@@ -11,18 +11,18 @@ The system combines a Python backend with a web interface to present environment
 
 ## Key Features
 
-- Air quality prediction and monitoring
-- Water quality classification
-- Soil fertility classification
-- Machine learning-based predictions
-- Air quality forecasting
-- Database storage of prediction results
-- Live environmental data and IoT monitoring features
+- **Air Quality Monitoring:** Work with air pollution data to understand pollution levels and patterns.
+- **Water Quality Monitoring:** Analyze water quality data and support water quality monitoring.
+- **Soil Quality Monitoring:** Work with soil quality data to explore environmental conditions.
+- **Pollution Forecasting:** Use forecasting techniques to estimate future pollution trends.
+- **Data Visualization:** Present environmental data and trends through visualizations.
+- **Machine Learning:** Apply machine learning techniques to support pollution prediction.
+- **IoT Integration:** Include ESP32-based water quality monitoring code for collecting sensor readings and sending data to a backend API.
 
 ## Technologies Used
 
 - **Programming Language:** Python
-- **Backend:** Flask
+- **Backend:** Flask, SQLite, Python
 - **Frontend:** HTML, CSS, JavaScript
 - **Machine Learning:** XGBoost, Prophet
 - **Explainable AI:** SHAP
