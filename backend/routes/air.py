@@ -1,14 +1,27 @@
+
 """
 air.py
-Air quality prediction route -- three live-data behaviors:
 
-  /api/air/predict-live  -- pulls real current data from OpenWeatherMap
-                             for a chosen station, predicts, and SAVES it.
-  /api/air/predict-demo  -- typed-in values, predicts, NEVER saved.
-  /api/air/live-peek     -- used by the on-page polling widget (every
-                             30s). Fetches + predicts like predict-live,
-                             but does NOT save.
+Defines API routes for air quality prediction and live monitoring.
+
+The routes support the following operations:
+
+- /api/air/predict-live:
+  Retrieves current data from OpenWeatherMap, generates a
+  prediction, and saves the reading to the database.
+
+- /api/air/predict-demo:
+  Generates a prediction using manually supplied input values
+  without saving the result.
+
+- /api/air/live-peek:
+  Retrieves current data and generates a prediction for the
+  live monitoring interface without saving the reading.
+
+The route functions use the trained air quality model and
+support the application's air quality monitoring features.
 """
+
 
 import os
 import joblib
